@@ -10,7 +10,7 @@ main: $(SRCS) $(HEADERS)
 	$(CXX) $(CXXFLAGS) $(SRCS) -o "bin/$@"
 
 main-debug: $(SRCS) $(HEADERS)
-	$(CXX) $(CXXFLAGS) -O0 $(SRCS) -o "$@"
+	$(CXX) $(CXXFLAGS) -O0 $(SRCS) -o "debug/$@"
 
 clean:
-	rm -f main main-debug
+	rm -rf bin debug

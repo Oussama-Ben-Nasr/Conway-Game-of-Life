@@ -1,12 +1,12 @@
 #include <iostream>
 #include <vector>
-#include <unistd.h>>
+#include <unistd.h>
 #include <stdlib.h>
 
 using namespace std;
 
-bool valid_loc(int i, int j, int n) {
-  return (i<n and j<n and i>=0 and j>=0);
+bool valid_loc(int i, int j, int m, int n) {
+  return (i<m and j<n and i>=0 and j>=0);
 };
 
 int count_living_neighbors(vector<vector<bool>>& grid, int i, int j) {
@@ -14,7 +14,8 @@ int count_living_neighbors(vector<vector<bool>>& grid, int i, int j) {
   int count = 0;
 
   for (pair<int, int>& direction: directions) {
-    if (valid_loc(i + direction.first, j + direction.second, grid.size()) and grid[i + direction.first][j + direction.second])
+    //if (valid_loc(i + direction.first, j + direction.second, grid.size(), grid[0].size()) and grid[(i + direction.first)][(j + direction.second)])
+    if (grid[(i + direction.first + 2 * grid.size()) % grid.size()][(j + direction.second + 2 * grid[0].size())% grid[0].size()])
       ++count;
   }
 
@@ -22,23 +23,16 @@ int count_living_neighbors(vector<vector<bool>>& grid, int i, int j) {
 };
 
 vector<vector<bool>> step(vector<vector<bool>>& grid) {
-  int n = grid.size();
-  vector<vector<bool>> new_grid(n, vector<bool>(n));
+  int m = grid.size();
+  int n = grid[0].size();
+  vector<vector<bool>> new_grid(m, vector<bool>(n));
   
-  for (int i = 0; i < n; ++i) {
+  for (int i = 0; i < m; ++i) {
     for (int j = 0; j < n; ++j) {
       int neigh_cnt = count_living_neighbors(grid, i, j);
-      if (grid[i][j]) {
-        if (neigh_cnt < 2) {
-          // living cell < 2 living neigbors: dies
-          new_grid[i][j] = false;
-        } else if (neigh_cnt < 4) {
-          // living cell 2 or 3 living neighbors: survives
+      if (grid[i][j] and (neigh_cnt == 2 or neigh_cnt == 3)) {
+	  // living cell 2 or 3 living neighbors: survives
           new_grid[i][j] = true;
-        } else {
-          // living cell > 3 living neighbors: dies
-          new_grid[i][j] = false;
-        }
       } else {
         // dead cell = 3 living neighbors: revieves
         if (neigh_cnt == 3) new_grid[i][j] = true;
@@ -51,7 +45,7 @@ vector<vector<bool>> step(vector<vector<bool>>& grid) {
 void render(vector<vector<bool>>& grid) {
   for (vector<bool>& row: grid) {
     for (bool cell: row) {
-      cout << (cell ? "\033[1;31m*\033[0m": ".");
+      cout << (cell ? "\033[1;31m#\033[0m": "#");
     }
     cout << endl;
   }
@@ -59,8 +53,8 @@ void render(vector<vector<bool>>& grid) {
 
 int main() {
   // finite grid first
-  int n = 30;
-  vector<vector<bool>> grid(n, vector<bool>(n));
+  int n = 50, m = 25;
+  vector<vector<bool>> grid(m, vector<bool>(n));
   
   // add one floater
   grid[10][11] = true;
@@ -70,15 +64,17 @@ int main() {
   grid[12][12] = true;
 
   // add one stick
+  
   grid[10][5] = true;
   grid[11][5] = true;
   grid[12][5] = true;
   
+
   // main loop
   while(1) {
     render(grid);
     grid = step(grid);
-    usleep(200000);
+    usleep(500000);
     system("clear");
   }
 }
