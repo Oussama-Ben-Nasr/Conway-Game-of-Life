@@ -78,7 +78,7 @@ int main() {
   while(1) {
     render(grid);
     grid = step(grid);
-    usleep(300000);
+    usleep(200000);
     system("clear");
   }
 }
