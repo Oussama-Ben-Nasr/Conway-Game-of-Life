@@ -27,20 +27,20 @@ vector<vector<bool>> step(vector<vector<bool>>& grid) {
   
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < n; ++j) {
-      // living cell < 2 living neigbors: dies
-      // living cell 2, 3 living neighbors: survives
-      // living cell > 3 living neighbors: dies
-      // dead cell == 3 living neighbors: revieves
       int neigh_cnt = count_living_neighbors(grid, i, j);
       if (grid[i][j]) {
         if (neigh_cnt < 2) {
+          // living cell < 2 living neigbors: dies
           new_grid[i][j] = false;
         } else if (neigh_cnt < 4) {
+          // living cell 2 or 3 living neighbors: survives
           new_grid[i][j] = true;
         } else {
+          // living cell > 3 living neighbors: dies
           new_grid[i][j] = false;
         }
       } else {
+        // dead cell = 3 living neighbors: revieves
         if (neigh_cnt == 3) new_grid[i][j] = true;
       }
     }
