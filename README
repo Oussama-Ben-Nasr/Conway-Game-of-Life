@@ -1,0 +1,4 @@
+## Conway Game of Life,
+Naive implementation as a 2D array.
+
+TODO: Extend functionality to endless grid.
