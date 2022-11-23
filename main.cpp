@@ -2,8 +2,10 @@
 #include <vector>
 #include <unistd.h>
 #include <stdlib.h>
+#include <chrono>
 
 using namespace std;
+using namespace std::chrono;
 
 bool valid_loc(int i, int j, int m, int n) {
   return (i<m and j<n and i>=0 and j>=0);
@@ -53,7 +55,7 @@ void render(vector<vector<bool>>& grid) {
 
 int main() {
   // finite grid first
-  int n = 50, m = 25;
+  int n = 40, m = 25;
   vector<vector<bool>> grid(m, vector<bool>(n));
   
   // add one floater
@@ -69,12 +71,15 @@ int main() {
   grid[11][5] = true;
   grid[12][5] = true;
   
-
   // main loop
   while(1) {
     render(grid);
+    auto start = high_resolution_clock::now(); 
     grid = step(grid);
-    usleep(500000);
+    auto stop = high_resolution_clock::now(); 
+    auto duration = duration_cast<microseconds>(stop - start);
+    cout << duration.count() << endl;
+    usleep(1000000);
     system("clear");
   }
 }
