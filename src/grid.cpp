@@ -8,7 +8,7 @@
 using namespace std;
 using namespace std::chrono;
 
-bool valid_loc(int i, int j, int m, int n) {
+bool within_grid(int i, int j, int m, int n) {
   return (i < m and j < n and i >= 0 and j >= 0);
 };
 
@@ -83,7 +83,7 @@ int main() {
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << duration.count() << endl;
-    usleep(1000000);
+    usleep(1000);
     system("clear");
   }
 }
